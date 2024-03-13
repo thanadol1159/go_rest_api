@@ -1,4 +1,4 @@
-module github.com/thamadol1159/go_rest_api
+module github.com/thanadol1159/go_rest_api
 
 go 1.22.1
 
