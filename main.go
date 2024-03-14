@@ -1,12 +1,12 @@
 package main
 
 import (
+	"github.com/adhtanjung/go_rest_api/database"
+	"github.com/adhtanjung/go_rest_api/router"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	_ "github.com/lib/pq"
-	"github.com/thanadol1159/go_rest_api/database"
-	"github.com/thanadol1159/go_rest_api/router"
 )
 
 func main() {

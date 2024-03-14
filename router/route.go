@@ -1,8 +1,8 @@
 package router
 
 import (
+	"github.com/adhtanjung/go_rest_api/handler"
 	"github.com/gofiber/fiber/v2"
-	"github.com/thanadol1159/go_rest_api/handler"
 )
 
 // SetupRoutes func
