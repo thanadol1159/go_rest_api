@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"net/http"
+
 	"github.com/adhtanjung/go_rest_api/database"
 	"github.com/adhtanjung/go_rest_api/model"
 	"github.com/gofiber/fiber/v2"
@@ -25,17 +27,18 @@ func CreateUser(c *fiber.Ctx) error {
 }
 
 // Get All Users from db
-func GetAllUsers(c *fiber.Ctx) error {
-	db := database.DB.Db
-	var users []model.User
+func GetAllUsers(w http.ResponseWriter, r *http.Request) (arr2 [5]int, err error) {
+	w.Header().Set("Content-Type", "application/json")
+	// db := database.DB.Db
+	// var users []model.User
 	// find all users in the database
-	db.Find(&users)
+	// db.Find(&users)
 	// If no user found, return an error
-	if len(users) == 0 {
-		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "Users not found", "data": nil})
-	}
+	// if len(users) == 0 {
+	// 	return c.Status(404).JSON(fiber.Map{"status": "error", "message": "Users not found", "data": nil})
+	// }
 	// return users
-	return c.Status(200).JSON(fiber.Map{"status": "sucess", "message": "Users Found", "data": users})
+	return
 }
 
 // GetSingleUser from db

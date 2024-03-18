@@ -7,7 +7,7 @@ import (
 
 // User struct
 type User struct {
-	gorm.Model
+	// gorm.Model
 	ID       uuid.UUID `gorm:"type:uuid;"`
 	Username string    `json:"username"`
 	Email    string    `json:"email"`
