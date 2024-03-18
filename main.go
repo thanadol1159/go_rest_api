@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
@@ -28,18 +29,64 @@ func getBooks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(books)
 }
-func main() {
 
-	// database.Connect()
-	// app := fiber.New()
-	// app.Use(logger.New())
-	// app.Use(cors.New())
-	// // router.SetupRoutes(app)
-	// // handle unavailable route
-	// // app.Use(func(c *fiber.Ctx) error {
-	// // 	return c.SendStatus(404) // => 404 "Not Found"
-	// // })
-	// app.Listen(":8080")
+func getBook(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	params := mux.Vars(r) // Gets params
+	// Loop through books and find one with the id from the params
+	for _, item := range books {
+		if item.ID, _ = strconv.Atoi(params["id"]); item.ID == item.ID {
+			json.NewEncoder(w).Encode(item)
+			return
+		}
+	}
+	json.NewEncoder(w).Encode(&Book{})
+}
+
+func createBooks(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "application/json")
+
+	var book Book
+	_ = json.NewDecoder(r.Body).Decode(&book)
+	book.ID = len(books) + 1
+	books = append(books, book)
+	json.NewEncoder(w).Encode(book)
+}
+
+func deleteBook(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "application/json")
+
+	params := mux.Vars(r)
+	for index, item := range books {
+		if item.ID, _ = strconv.Atoi(params["id"]); item.ID == item.ID {
+			books = append(books[:index], books[index+1:]...)
+			break
+		}
+	}
+	json.NewEncoder(w).Encode(books)
+}
+
+func updateBook(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "application/json")
+
+	params := mux.Vars(r)
+	for index, item := range books {
+		if item.ID, _ = strconv.Atoi(params["id"]); item.ID == item.ID {
+			books = append(books[:index], books[index+1:]...)
+			var book Book
+			_ = json.NewDecoder(r.Body).Decode(&book)
+			book.ID = item.ID
+			books = append(books, book)
+			break
+		}
+	}
+	json.NewEncoder(w).Encode(books)
+}
+func main() {
 
 	r := mux.NewRouter()
 
@@ -49,10 +96,10 @@ func main() {
 
 	// Route handles & endpoints
 	r.HandleFunc("/api/books", getBooks).Methods("GET")
-	// r.HandleFunc("/api/books/{id}", getBook).Methods("GET")
-	// r.HandleFunc("/api/books", createBook).Methods("POST")
-	// r.HandleFunc("/api/books/{id}", updateBook).Methods("PUT")
-	// r.HandleFunc("/api/books/{id}", deleteBook).Methods("DELETE")
+	r.HandleFunc("/api/books/{id}", getBook).Methods("GET")
+	r.HandleFunc("/api/books", createBooks).Methods("POST")
+	r.HandleFunc("/api/books/{id}", updateBook).Methods("PUT")
+	r.HandleFunc("/api/books/{id}", deleteBook).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
